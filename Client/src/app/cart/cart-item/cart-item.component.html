@@ -1,0 +1,39 @@
+  <div class="cart-item-row">
+  <!-- Left Column: Book Image -->
+  <div class="cart-image">
+    <img [src]="item.coverImage? 'http://localhost:3000/' + item.coverImage : 'assets/images/placeholder.jpg'" alt="{{ item.title }}" />
+  </div>
+
+  <!-- Middle Column: Book Info + Quantity Controls -->
+  <div class="cart-details">
+    <h4>{{ item.title }}</h4>
+    <p class="author">by {{ item.author || 'Unknown' }}</p>
+    <p>summary:{{item.summary}}</p>
+
+    <div class="quantity-controls">
+      <div class="btn-group">
+      <button mat-icon-button
+              (click)="adjustQuantity(-1)"
+              [matTooltip]="item.quantity === 1 ? 'Remove item' : 'Reduce quantity'">
+        <mat-icon>{{ item.quantity === 1 ? 'delete' : 'remove' }}</mat-icon>
+      </button>
+
+      <span class="counter">{{ item.quantity }}</span>
+
+      <button mat-icon-button
+              (click)="adjustQuantity(1)"
+              matTooltip="Increase quantity">
+        <mat-icon>add</mat-icon>
+      </button>
+</div>
+    <button mat-button class="delete-link">Share</button>
+    <button mat-button class="delete-link"(click)="removeItem()">Delete</button>
+    </div>
+  </div>
+
+  <!-- Right Column: Price -->
+  <div class="cart-price">
+    <!-- <p>${{ item.price * item.quantity | number: '1.2-2' }}</p> -->
+    <p>{{ item.price |currency }} <span class="sm-text"> [ Qty: {{item.quantity}} ]</span></p>
+  </div>
+</div>

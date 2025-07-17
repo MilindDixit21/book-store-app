@@ -1,0 +1,97 @@
+<div  class="edit-container">
+<mat-card class="example-card" appearance="outlined">
+    <p>
+         <mat-card-header>
+  <mat-card-title>{{ isEditMode ? "Edit Book" : "Add Book" }}</mat-card-title>
+  </mat-card-header>
+  </p>
+  <mat-card-content [formGroup]="bookForm">
+    
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title" required />
+      <mat-error *ngIf="bookForm.get('title')?.hasError('required')">
+        Title is required.
+      </mat-error>
+    </mat-form-field>
+
+       <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Price</mat-label>
+      <input matInput formControlName="price" required />
+      <mat-error *ngIf="bookForm.get('price')?.hasError('required')">
+        Price is required.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Author</mat-label>
+      <input matInput formControlName="author" required />
+      <mat-error *ngIf="bookForm.get('author')?.hasError('required')">
+        Author is required.
+      </mat-error>
+    </mat-form-field>
+
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Genre</mat-label>
+      <input matInput formControlName="genre" required />
+      <mat-error *ngIf="bookForm.get('genre')?.hasError('required')">
+        Genre is required.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Publish Date</mat-label>
+      <input matInput formControlName="publishDate" type="date" />
+      <mat-error *ngIf="bookForm.get('publishDate')?.hasError('required')">
+        Publish Date is required.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>ISBN</mat-label>
+      <input matInput formControlName="ISBN" />
+      <mat-error *ngIf="bookForm.get('ISBN')?.hasError('required')">
+        ISBN is required.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Summary</mat-label>
+      <textarea matInput formControlName="summary" required=""></textarea>
+      <mat-error *ngIf="bookForm.get('summary')?.hasError('required')">
+        Summary is required.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status">
+        <mat-option *ngFor="let status of statusOptions" [value]="status">
+          {{ status | titlecase }}
+        </mat-option>
+      </mat-select>
+       <mat-error *ngIf="bookForm.get('status')?.hasError('required')">
+      Title is required.
+    </mat-error>
+    </mat-form-field>
+    
+
+   
+
+    <input type="file" (change)="onFileChange($event)" accept="image/*" />
+    <div *ngIf="previewUrl" class="image-preview">
+      <img [src]="previewUrl" alt="Cover preview" width="150" />
+    </div>
+
+
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="bookForm.invalid">Save</button>
+&nbsp;
+    <button mat-raised-button color="warn" (click)="router.navigate(['/books'])">Cancel</button>
+  </mat-card-actions>
+
+</mat-card>
+</div>

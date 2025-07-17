@@ -1,0 +1,30 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { font-size: 12px;; margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  font-size: 12px;
+}
+
+.mat-form-field {
+  margin-bottom: 8px;
+}
+
+.mat-form-field-wrapper {
+  padding: 0 8px;
+}
+
+.mat-input-element {
+  padding: 4px 8px;
+  font-size: 13px;
+}
+
+.mat-raised-button {
+  padding: 4px 12px;
+  font-size: 13px;
+}
+
+.mat-select-trigger {
+  padding: 4px 8px;
+  font-size: 13px;
+}

@@ -1,0 +1,231 @@
+<div class="dashboard-container">
+  <!-- Left Sidebar -->
+  <div class="sidebar">
+    <h3>Filters</h3>
+
+<mat-form-field appearance="fill">
+  <mat-label>Genre</mat-label>
+  <input
+    matInput
+    [matAutocomplete]="genreAuto"
+    [(ngModel)]="filters.genre"
+    (ngModelChange)="filterGenres($event)"
+    (blur)="onGenreBlur()"
+    placeholder="Start typing..."
+  />
+  <mat-autocomplete #genreAuto="matAutocomplete">
+    <mat-option *ngFor="let genre of filteredGenres" [value]="genre">
+      {{ genre }}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Author</mat-label>
+      <input matInput [(ngModel)]="filters.author" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Sort By</mat-label>
+      <mat-select [(ngModel)]="filters.sortBy">
+        <mat-option value="title">Title</mat-option>
+        <mat-option value="publishDate">Publish Date</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="loadBooks()">
+      Apply
+    </button>
+  </div>
+
+  <!-- Right Content Area -->
+  <div class="main-content">
+    <h2>My Store <span class="small-text">[ Available Books: {{books.length}} ]</span></h2>
+
+    <div class="actions" *ngIf="books.length && (role === 'admin' || role === 'editor')">
+      <button style="min-width:30px"  mat-raised-button color="primary" routerLink="/books/new">
+        <mat-icon style="margin-right: 0;">add</mat-icon></button> &nbsp;
+      <button mat-stroked-button color="accent" (click)="toggleView()">
+        <mat-icon>{{ isCardView ? "table_chart" : "view_module" }}</mat-icon>{{ isCardView ? "Table View" : "Card View" }}</button>
+    </div>
+
+    <!-- 📋 Table View for Admin/Editor -->
+    <ng-container
+      *ngIf="
+        (role === 'admin' || role === 'editor') && !isCardView;
+        else cardView
+      "
+    >
+      <table mat-table [dataSource]="books" class="mat-elevation-z1 book-table">
+        <ng-container matColumnDef="coverImage">
+          <th mat-header-cell *matHeaderCellDef>Cover</th>
+          <td mat-cell *matCellDef="let book">
+            <img
+              [src]="book.coverImage? 'http://localhost:3000/' + book.coverImage : 'assets/images/placeholder.jpg'"
+              alt="{{ book.title }}"
+              class="thumbnail"
+              (error)="coverError($event)"
+            />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef>Price</th>
+          <td mat-cell *matCellDef="let book">{{ book.price |currency }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef>Title</th>
+          <td mat-cell *matCellDef="let book">{{ book.title }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="author">
+          <th mat-header-cell *matHeaderCellDef>Author</th>
+          <td mat-cell *matCellDef="let book">{{ book.author }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="genre">
+          <th mat-header-cell *matHeaderCellDef>Genre</th>
+          <td mat-cell *matCellDef="let book">{{ book.genre || "—" }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let book">{{ book.status }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let book">
+            <button
+              mat-button
+              color="primary"
+              [routerLink]="['/books', book._id, 'edit']"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              *ngIf="role === 'admin'"
+              mat-button
+              color="warn"
+              (click)="deleteBook(book._id)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+
+
+          
+  <button mat-button (click)="addToCart(book)">
+    <mat-icon>shopping_cart</mat-icon>
+  </button>
+
+  <button mat-button (click)="openBookDetails(book)">
+    <mat-icon>info</mat-icon> Details
+  </button>
+
+
+            
+          </td>
+        </ng-container>
+
+
+
+        <tr
+          mat-header-row
+          *matHeaderRowDef="[
+            'coverImage',
+            'title',
+            'price',
+            'author',
+            'genre',
+            'status',
+            'actions'
+          ]"
+        ></tr>
+        <tr
+          mat-row
+          *matRowDef="
+            let row;
+            columns: [
+              'coverImage',
+              'title',
+              'price',
+              'author',
+              'genre',
+              'status',
+              'actions'
+            ]
+          "
+        ></tr>
+      </table>
+    </ng-container>
+
+    <!-- 🧾 Card View for All Roles -->
+    <ng-template #cardView>
+      <div *ngIf="books.length > 0; else noBooksFound" class="card-grid">
+        <mat-card *ngFor="let book of books" class="book-card mat-elevation-z1">
+          <img
+            mat-card-image
+            [src]="
+              book.coverImage
+                ? 'http://localhost:3000/' + book.coverImage
+                : 'assets/images/placeholder.jpg'
+            "
+            alt="Book Cover"
+            (error)="coverError($event)"
+          />
+
+          <mat-card-header>
+            <mat-card-title>
+              <span class="title-click" (click)="openBookDetails(book)">
+                {{ book.title }}
+              </span>
+            </mat-card-title>
+            <mat-card-subtitle>Author: {{ book.author }}</mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p>{{ getSnippet(book.summary, 65) }}</p>
+            <p>
+              <!-- <strong>Genre:</strong> {{ book.genre || "—" }} | -->
+              <strong>Price:</strong> {{book.price | currency}}</p>
+            <!-- <p><strong>Status:</strong> {{ book.status }}</p> -->
+          </mat-card-content>
+
+           <!-- Row 1: Admin/Editor Buttons -->
+<mat-card-actions *ngIf="role === 'admin' || role === 'editor'" class="row-actions">
+  <button mat-button color="primary" [routerLink]="['/books', book._id, 'edit']">
+    <mat-icon>edit</mat-icon> Edit
+  </button>
+  <button *ngIf="role === 'admin'" mat-button color="warn" (click)="deleteBook(book._id)">
+    <mat-icon>delete</mat-icon> Delete
+  </button>
+</mat-card-actions>
+
+<!-- Row 2: Universal Buttons -->
+<mat-card-actions class="universal-actions">
+  <button mat-stroked-button color="primary" (click)="addToCart(book)">
+    <mat-icon>shopping_cart</mat-icon> Add to Cart
+  </button>
+
+  <button mat-stroked-button  (click)="openBookDetails(book)">
+    <mat-icon>info</mat-icon> View Details
+  </button>
+</mat-card-actions>
+
+
+        </mat-card>
+      </div>
+    </ng-template>
+
+    <!-- 🚫 Empty State -->
+    <ng-template #noBooksFound>
+      <p>No books found. 📭</p>
+      <div *ngIf="role === 'admin' || role === 'editor'">
+        <button mat-raised-button color="primary" routerLink="/books/new">
+          Add Your First Book
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</div>

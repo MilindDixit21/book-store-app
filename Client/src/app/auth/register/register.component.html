@@ -1,0 +1,17 @@
+<h1>Register</h1>
+<form (ngSubmit)="submit()">
+  <input [(ngModel)]="form.username" name="username" placeholder="Username" required>
+  <input [(ngModel)]="form.email" name="email" placeholder="Email" required>
+  <input [(ngModel)]="form.password" name="password" placeholder="Password" type="password" required>
+  <select [(ngModel)]="form.role" name="role">
+    <option value="viewer">Viewer</option>
+    <option value="editor">Editor</option>
+    <option value="admin">Admin</option>
+  </select>
+  <button type="submit">Register</button>
+</form>
+
+<p class="form-footer">
+  Already have an account?
+  <a routerLink="/login">Login here</a>
+</p>

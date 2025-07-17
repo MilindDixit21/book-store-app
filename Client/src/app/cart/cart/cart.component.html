@@ -1,0 +1,50 @@
+<div class="cart-wrapper">
+  <!-- Left Column: Scrollable Items -->
+  <div class="cart-items">
+
+    <div class="empty-cart" *ngIf="items.length === 0">
+  <mat-icon>shopping_cart</mat-icon>
+  <p>Your cart is empty.</p>
+</div>
+
+
+    <app-cart-item
+      *ngFor="let item of items"
+      [item]="item"
+      (adjust)="updateQuantity($event)"
+      (remove)="removeItem($event)">
+    </app-cart-item>
+    <div class="subtotal" *ngIf="items.length">Subtotal ({{totalItems}} items): <strong>{{ subtotal|currency}}</strong></div>
+  </div>
+
+  <!-- Right Column: Fixed Summary -->
+  <div class="cart-summary" *ngIf="items.length">
+    <table >
+      <tr>
+        <td>Subtotal</td>
+        <td>${{ subtotal }}</td>
+      </tr>
+      <tr>
+        <td>Shipping</td>
+        <td>${{ shipping }}</td>
+      </tr>
+      <tr>
+        <td>Discount</td>
+        <td>−${{ discount }}</td>
+      </tr>
+      <tr>
+        <td>Tax</td>
+        <td>${{ tax }}</td>
+      </tr>
+      <tr class="total-row">
+        <td>Estimated Total</td>
+        <td>${{ estimatedTotal }}</td>
+      </tr>
+    </table>
+
+    <button mat-raised-button color="primary" class="checkout-btn">
+      Proceed to Checkout
+    </button>
+  </div>
+</div>
+

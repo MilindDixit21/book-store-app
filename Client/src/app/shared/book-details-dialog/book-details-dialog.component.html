@@ -1,0 +1,8 @@
+<mat-dialog-content class="dialog-content">
+  <h2>{{ data.title }}</h2>
+  <img [src]="'http://localhost:3000/' + data.coverImage" alt="Cover Image" class="cover-large">
+  <p class="summary-text">{{ data.summary }}</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

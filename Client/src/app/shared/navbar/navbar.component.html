@@ -1,0 +1,39 @@
+<mat-toolbar color="primary">
+  <span> <a routerLink="/books" style="color: rgb(255, 255, 255);text-decoration: none;">📚 BookStore App </a></span>
+  <span class="spacer"></span>
+
+  <a mat-button routerLink="/books">Books</a>
+  <button mat-button [routerLink]="['/cart']">Cart</button>
+ 
+  <a *ngIf="showLogin" mat-button routerLink="/login">Login</a>
+  <a *ngIf="!isLoggedIn && !showLogin" mat-button routerLink="/register">Register</a>
+
+  <a *ngIf="isAdmin" mat-button routerLink="/users">User Dashboard</a>
+
+  
+  <!-- If user IS logged in -->
+   <ng-container *ngIf="isLoggedIn">
+      <a mat-button (click)="logout()">Logout</a> |
+       <span class="text-small margin-left-3"> {{userInfo?.username | titlecase}} 
+       {{userInfo?.role === 'Admin' || userInfo?.role === 'Editor'? '['+userInfo?.role+']' : ''}}
+      </span>
+   </ng-container>
+  
+
+</mat-toolbar>
+
+<div *ngIf="showBackToBooks" class="breadcrumb-nav">
+  <button mat-button color="accent" [routerLink]="['/books']">
+    ← Back to Books
+  </button>
+</div>
+
+<!-- 
+== breadcrumb code===
+<nav aria-label="breadcrumb" *ngIf="showBackToBooks">
+  <ol class="breadcrumb">
+    <li><a routerLink="/books">Books</a></li>
+    <li>{{ router.url.includes('/new') ? 'Add New' : 'Edit Book' }}</li>
+  </ol>
+</nav> 
+-->

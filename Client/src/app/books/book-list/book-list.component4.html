@@ -1,0 +1,80 @@
+<mat-card>
+  <mat-card-title>Books</mat-card-title>
+  <mat-card-content>
+
+    <!-- Filters -->
+    <div class="filters">
+      <mat-form-field>
+        <mat-label>Genre</mat-label>
+        <input matInput [(ngModel)]="filters.genre">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Author</mat-label>
+        <input matInput [(ngModel)]="filters.author">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Sort By</mat-label>
+        <mat-select [(ngModel)]="filters.sortBy">
+          <mat-option value="title">Title</mat-option>
+          <mat-option value="publishDate">Publish Date</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="loadBooks()">Apply</button>
+    </div>
+
+    <!-- Add Book (admin/editor only) -->
+    <div *ngIf="role === 'admin' || role === 'editor'" class="actions">
+      <a mat-raised-button color="primary" routerLink="/books/new"><mat-icon>add</mat-icon>Add Book</a>
+    </div>
+
+    <!-- Book Table -->
+    <table mat-table [dataSource]="books" class="mat-elevation-z8">
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef> Title </th>
+        <td mat-cell *matCellDef="let book" (click)="openBookDetails(book)" class="title-click"> {{ book.title }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="coverImage">
+      <th mat-header-cell *matHeaderCellDef> Cover </th>
+      <td mat-cell *matCellDef="let book">
+        <img *ngIf="book.coverImage" [src]="'http://localhost:3000/'+ book.coverImage" alt="Cover" width="50" height="70" (error)="coverError($event)">
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="summary">
+      <th mat-header-cell *matHeaderCellDef> Summary </th>
+      <td mat-cell *matCellDef="let book">
+        {{ book.summary | slice:0:65 }}{{ book.summary?.length > 65 ? '...' : '' }}
+      </td>
+    </ng-container>
+
+      <ng-container matColumnDef="author">
+        <th mat-header-cell *matHeaderCellDef> Author </th>
+        <td mat-cell *matCellDef="let book"> {{ book.author }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let book"> {{ book.status }} </td>
+      </ng-container>
+
+      <ng-container *ngIf="role === 'admin' || role === 'editor'" matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let book">
+          <a [routerLink]="['/books', book._id, 'edit']" mat-raised-button color="primary" routerLink="/books/new" style="margin-right: 5px;"><mat-icon>edit</mat-icon></a>
+           <button *ngIf="role === 'admin'" mat-raised-button color="warn" (click)="deleteBook(book._id)"><mat-icon>delete</mat-icon></button>
+        </td>
+      </ng-container>
+
+      <!-- <tr mat-header-row *matHeaderRowDef="['title', 'author', 'status', 'actions']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['title', 'author', 'status', 'actions']"></tr> -->
+
+      <!-- Role based show-hide Action column -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+
+    </table>
+
+  </mat-card-content>
+</mat-card>
