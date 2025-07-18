@@ -3,7 +3,7 @@
   <span class="spacer"></span>
 
   <a mat-button routerLink="/books">Books</a>
-  <button mat-button [routerLink]="['/cart']">Cart</button>
+  <button mat-button [routerLink]="['/cart']">Cart [{{totalItems}}]</button>
  
   <a *ngIf="showLogin" mat-button routerLink="/login">Login</a>
   <a *ngIf="!isLoggedIn && !showLogin" mat-button routerLink="/register">Register</a>

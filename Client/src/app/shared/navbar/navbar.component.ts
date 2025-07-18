@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
+import { CartService } from 'src/app/services/cart.service';
+import { CartItem } from 'src/app/models/cart.model';
 
 @Component({
   selector: 'app-navbar',
@@ -8,10 +10,27 @@ import { ChangeDetectorRef } from '@angular/core';
   styleUrls: ['./navbar.component.scss']
 })
 
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
 
   showLogin = true;
+  items: CartItem[]=[];
+  totalItems =0;
 
+  ngOnInit(): void {
+  this.cartService.getCart().subscribe(items => {
+    this.items = items;
+     this.totalItems = this.items.reduce((sum, item) => sum + item.quantity, 0);
+  })
+  }
+
+  constructor(public router: Router, private cartService: CartService, private changeDetector:ChangeDetectorRef) {
+    this.router.events.subscribe(event =>{
+      if(event instanceof NavigationEnd){
+        this.showLogin = !this.isLoggedIn && event.urlAfterRedirects !== '/register';
+      }
+    });
+  }
+  
   get isLoggedIn(): boolean{
     return !!localStorage.getItem('token');
   }
@@ -19,7 +38,7 @@ export class NavbarComponent {
   get currentRoute(): string {
     return this.router.url;
   }
-
+  
   get userInfo() {
   const token = localStorage.getItem('token');
   if (!token) return null;
@@ -38,14 +57,7 @@ export class NavbarComponent {
     return payload.role === 'admin';
   }
 
-  constructor(public router: Router, private changeDetector:ChangeDetectorRef) {
-    this.router.events.subscribe(event =>{
-      if(event instanceof NavigationEnd){
-        this.showLogin = !this.isLoggedIn && event.urlAfterRedirects !== '/register';
-      }
-    });
-  }
-
+  
   logout() {
     localStorage.removeItem('token');
     this.showLogin = true;
