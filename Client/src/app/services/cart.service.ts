@@ -1,106 +1,156 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CartItem } from '../models/cart.model';
-import { BehaviorSubject } from 'rxjs';
-
-const CART_KEY = 'book-dashboard.cart';
+import { AuthService } from './auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
-//This service manages state via BehaviorSubject — so updates reflect in real time across components.
-
 export class CartService {
-
-  private items: CartItem[]=[];
+  private items: CartItem[] = [];
   private cart$ = new BehaviorSubject<CartItem[]>([]);
   private total$ = new BehaviorSubject<number>(0);
 
-  constructor() { 
-    const stored = localStorage.getItem(CART_KEY);
-    if(stored){
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {
+    // on init, pull from localStorage (guest or user)
+    const stored = localStorage.getItem(this.getCartStorageKey());
+    if (stored) {
       try {
         this.items = JSON.parse(stored);
-        this.updateCartState(false); //Avoid double save during load
+        this.updateCartState(false);
       } catch {
-        console.warn('Failed to parse stored cart. Restting');
-        localStorage.removeItem(CART_KEY);
+        localStorage.removeItem(this.getCartStorageKey());
       }
     }
   }
 
-  getCart(){
-    return this.cart$.asObservable();
+  // Returns 'cart_guest' or 'bookCart_{userId}'
+  getCartStorageKey(): string {
+    const userId = this.authService.getUserId();
+    return userId ? `bookCart_${userId}` : 'cart_guest';
   }
 
-  getTotalAmount(){
-    return this.total$.asObservable();
+  // Expose streams
+  getCart(): Observable<CartItem[]> { return this.cart$.asObservable(); }
+  getTotalAmount(): Observable<number> { return this.total$.asObservable(); }
+
+  // Grab guest cart snapshot
+  getGuestCart(): CartItem[] {
+    const raw = localStorage.getItem('cart_guest');
+    try {
+      return raw ? JSON.parse(raw) as CartItem[] : [];
+    } catch {
+      return [];
+    }
   }
 
-  addToCart(book:CartItem):void {
-    //error handling code
-    if(!book || !book._id || book.price === undefined){
-      console.warn('invalid book item. Cannot add to cart', book);
-      return;      
-    }
+  // Replace current cart in memory + storage + UI
+  setCart(items: CartItem[]): void {
+    this.items = [...items];
+    this.updateCartState(true);
+  }
 
-    const existing = this.items.find(item => item._id === book._id);
-    if(existing){
-      existing.quantity+=1;
-    }else{
-      this.items.push({...book, quantity:1});
+  // add single or array of items
+  addToCart(cartOrItem: CartItem | CartItem[]): void {
+    const toAdd = Array.isArray(cartOrItem) ? cartOrItem : [cartOrItem];
+    toAdd.forEach(book => {
+      if (!book?._id || book.price == null) return;
+      const exist = this.items.find(i => i._id === book._id);
+      if (exist) exist.quantity += book.quantity || 1;
+      else this.items.push({ ...book, quantity: book.quantity || 1 });
+    });
+    this.updateCartState(true);
+
+    // if logged in, push to server
+    if (this.authService.getToken()) {
+      this.saveCartToServer({ items: this.items }).subscribe({
+        error: err => console.warn('Sync failed on add:', err)
+      });
     }
-    this.updateCartState();
   }
 
   removeFromCart(bookId: string, delta: number): void {
-  if (!bookId || typeof delta !== 'number') {
-    console.warn('🚫 Invalid parameters:', { bookId, delta });
-    return;
+    const idx = this.items.findIndex(i => i._id === bookId);
+    if (idx < 0) return;
+    const item = this.items[idx];
+    if (delta >= item.quantity) {
+      this.items.splice(idx, 1);
+    } else {
+      item.quantity -= delta;
+    }
+    this.updateCartState(true);
+    if (this.authService.getToken()) {
+      this.saveCartToServer({ items: this.items }).subscribe({
+        error: err => console.warn('Sync failed on remove:', err)
+      });
+    }
   }
 
-  const item = this.items.find(i => i._id === bookId);
-
-  if (!item) {
-    console.warn(`❓ Book with ID ${bookId} not found in cart.`);
-    return;
-  }
-
-  if (delta >= item.quantity || delta < 0) {
-    // Remove completely if delta exceeds or matches quantity, or forced removal
-    this.items = this.items.filter(i => i._id !== bookId);
-    console.log(`🗑️ Removed item from cart: ${bookId}`);
-  } else {
-    // Reduce quantity
-    item.quantity -= delta;
-    console.log(`🔧 Reduced quantity by ${delta} for item: ${bookId}`);
-  }
-
-  this.updateCartState();
-}
-
-  adjustQuantity(bookId:string, delta:number):void{
+  adjustQuantity(bookId: string, delta: number): void {
     const item = this.items.find(i => i._id === bookId);
-    if(item){
-      item.quantity = Math.max(1, item.quantity + delta);
+    if (!item) return;
+    item.quantity = Math.max(1, item.quantity + delta);
+    this.updateCartState(true);
+    if (this.authService.getToken()) {
+      this.saveCartToServer({ items: this.items }).subscribe({
+        error: err => console.warn('Sync failed on adjust:', err)
+      });
     }
-    this.updateCartState();
   }
 
-  private updateCartState(save = true):void {
+  // Pull the user’s cart from Mongo
+  getUserCartFromServer(): Observable<{ items?: CartItem[] }> {
+    const token = this.authService.getToken();
+    if (!token) return throwError(() => new Error('No auth token'));
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    return this.http.get<{ items?: CartItem[] }>(
+      'http://localhost:3000/api/cart',
+      { headers }
+    );
+  }
+
+  // Overwrite server cart
+  saveCartToServer(payload: { items: CartItem[] }): Observable<any> {
+    const token = this.authService.getToken();
+    if (!token) return throwError(() => new Error('No auth token'));
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    return this.http.post('http://localhost:3000/api/cart', payload, { headers });
+  }
+
+  // Pure merge: dedupe by _id and sum quantities
+  mergeCarts(serverCart: CartItem[], guestCart: CartItem[]): CartItem[] {
+    const map = new Map<string, CartItem>();
+    [...serverCart, ...guestCart].forEach(item => {
+      if (!item || !item._id) return;
+      const existing = map.get(item._id);
+      if (existing) existing.quantity += item.quantity;
+      else map.set(item._id, { ...item });
+    });
+    return Array.from(map.values());
+  }
+
+  // internal: push to BehaviorSubject and storage
+  private updateCartState(writeToStorage: boolean): void {
     this.cart$.next([...this.items]);
-    this.total$.next(this.items.reduce((sum, item) => sum +item.price * item.quantity, 0));
-    if(save){
-      localStorage.setItem(CART_KEY, JSON.stringify(this.items));
+    this.total$.next(
+      this.items.reduce((sum, i) => sum + i.price * i.quantity, 0)
+    );
+    if (writeToStorage) {
+      localStorage.setItem(
+        this.getCartStorageKey(),
+        JSON.stringify(this.items)
+      );
     }
   }
 
+  // clear completely (invoked e.g. on logout)
   clearCart(): void {
-  this.items = [];
-  localStorage.removeItem(CART_KEY);
-  this.updateCartState();
-}
-
-
-
+    this.items = [];
+    localStorage.removeItem(this.getCartStorageKey());
+    this.updateCartState(false);
+  }
 }

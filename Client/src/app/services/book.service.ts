@@ -16,7 +16,7 @@ private apiBooksUrl = 'http://localhost:3000/api/books';
 createBook(formData: FormData) {
    return this.http.post(this.apiBooksUrl, formData, {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`
+      Authorization: `Bearer ${localStorage.getItem('auth_token')}`
     }
   });
 }
@@ -24,7 +24,7 @@ createBook(formData: FormData) {
 updateBook(id: string, formData: FormData) {
   return this.http.put(`${this.apiBooksUrl}/${id}`, formData, {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`
+      Authorization: `Bearer ${localStorage.getItem('auth_token')}`
     }
   });
 }
@@ -32,13 +32,13 @@ updateBook(id: string, formData: FormData) {
 deleteBook(id: string) {
   return this.http.delete<{message:string}>(`${this.apiBooksUrl}/${id}`, {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`
+      Authorization: `Bearer ${localStorage.getItem('auth_token')}`
     }
   });
 }
 
 getBookById(id: string) {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('auth_token');
   const headers = {
     Authorization: `Bearer ${token}`
   };

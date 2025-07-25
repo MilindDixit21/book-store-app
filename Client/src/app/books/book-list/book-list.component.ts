@@ -30,7 +30,7 @@ filters = { genre: '', author: '', sortBy: '' };
 role = ''; // from decoded JWT
 
 ngOnInit() {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('auth_token');
   this.role = token ? JSON.parse(atob(token.split('.')[1])).role : 'guest';
 
   this.displayedColumns =['title', 'coverImage', 'summary','author','status'];

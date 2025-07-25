@@ -1,17 +1,15 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
+import { CanActivate, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
 
-
   constructor(private router: Router){}
 
   canActivate(): boolean {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('auth_token');
     const role = this.decodeRole(token);
 
     // - Admin or Editor -
@@ -27,6 +25,7 @@ export class AuthGuard implements CanActivate {
   private decodeRole(token: string | null): string {
     if (!token) return '';
     const payload = JSON.parse(atob(token.split('.')[1]));
+    console.log('payload',payload.role);    
     return payload.role;
   }
 

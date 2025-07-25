@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 
 import userRoutes from './routes/users.js';
 import bookRoutes from './routes/books.js';
+import cartRoutes from './routes/carts.js';
 
 const app = express();
 
@@ -24,6 +25,7 @@ mongoose.connect(process.env.MONGO_URI)
 //Routes
 app.use('/api/users/', userRoutes);
 app.use('/api/books/', bookRoutes);
+app.use('/api/cart/', cartRoutes);
 
 //server
 const PORT = process.env.PORT;

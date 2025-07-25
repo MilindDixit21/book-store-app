@@ -12,7 +12,7 @@ export class UserService {
 
   getUsers(){
     return this.http.get<User[]>(this.apiUrl, {
-      headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}
+      headers: {Authorization: `Bearer ${localStorage.getItem('auth_token')}`}
     }
   );
   }
@@ -20,14 +20,14 @@ export class UserService {
   getUserById(id:string){
     return this.http.get<User>(`${this.apiUrl}/${id}`,{
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${localStorage.getItem('auth_token')}`
       }
     });
   }
   updateRole(id: string, role: string) {
       return this.http.put<{message:string}>(`${this.apiUrl}/${id}/role`, {role}, {
         headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${localStorage.getItem('auth_token')}`
       }
       });
   }

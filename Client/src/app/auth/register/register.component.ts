@@ -21,9 +21,9 @@ export class RegisterComponent {
   submit(){
     this.auth.register(this.form).subscribe({
       next:(res:any) =>{
-        localStorage.setItem('token', res.token);
-        this.router.navigate(['/books']);
+        localStorage.setItem('auth_token', res.token);
         alert('registered successfully');
+        this.router.navigate(['/login']);
       },
       error:()=>alert('Registration failed')
     });

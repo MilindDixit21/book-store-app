@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { CartService } from 'src/app/services/cart.service';
+import { CartItem } from 'src/app/models/cart.model.js';
 
 @Component({
   selector: 'app-login',
@@ -14,18 +16,70 @@ export class LoginComponent {
     password: ''
   };
 
-   constructor(private auth: AuthService, private router:Router) {}
+  loading = false;
+  errorMessage:string ='';
 
-  submit() {
-    this.auth.login(this.credentials).subscribe({
+   constructor(private authService: AuthService, private cartService:CartService, private router:Router) {}
+
+  submit() :void{
+    this.loading =true;
+    this.errorMessage='';
+    this.authService.login(this.credentials).subscribe({
       next: (res: any) => {
-        localStorage.setItem('token', res.token);
+        this.authService.emitLogin();
+        localStorage.setItem('auth_token', res.token); // save JWT
+        localStorage.setItem('user_session', JSON.stringify(res)); //  Save full user info
         // alert('Login successful');
-        this.router.navigate(['/books']);
+
+        //Emit login state reactively
+        // this.authService.emitLogin(); // not implemented yet*
+
+        // Load guest cart from localStorage
+        let guestCart:CartItem[]=[];
+        try {
+          const raw = localStorage.getItem('cart_guest');
+          guestCart = raw ? JSON.parse(raw):[];
+        } catch (error) {
+          console.warn('Guest cart parsing failed:', error);
+        }
+        // get user's server cart
+        this.cartService.getUserCartFromServer().subscribe({
+          next:(serverCartResponse:{items?:CartItem[]}) => {
+              const serverCart = serverCartResponse.items ?? [];
+console.log('Login component:serverCart: ', serverCart);
+
+              //Merge guest and server cart
+              const merged = this.cartService.mergeCarts(serverCart, guestCart);
+              console.log('login component:merged', merged);
+              console.log('📦 Final cart payload:', merged);
+
+              //sync final cart to MongoDB
+              this.cartService.saveCartToServer({items:merged}).subscribe({
+                next:()=>{
+                  console.log("login component: reached here");
+                  
+                  localStorage.removeItem('cart_guest');
+                  this.cartService.addToCart(merged); 
+                  this.router.navigate(['/books']);
+                },
+                 error:(err) =>{
+              console.error('Sync failed:', err);
+              this.cartService.addToCart(merged); //fallback local load
+              this.router.navigate(['/books']); // continue even if fetch fails
+            }
+              });
+            },
+            error:(err) =>{
+              console.error('Failed to fetch server cart:', err);
+              this.router.navigate(['/books']); // continue even if fetch fails
+            }
+        }); 
       },
-      error: () => alert('Login failed')
+      error: (err) =>{
+        console.error('Login failed:', err);
+        this.errorMessage = err?.error?.message || 'Invalid email or password';
+        this.loading = false;        
+      }
     });
   }
-
-
 }

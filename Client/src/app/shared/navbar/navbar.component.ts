@@ -32,7 +32,7 @@ export class NavbarComponent implements OnInit {
   }
   
   get isLoggedIn(): boolean{
-    return !!localStorage.getItem('token');
+    return !!localStorage.getItem('auth_token');
   }
 
   get currentRoute(): string {
@@ -40,7 +40,7 @@ export class NavbarComponent implements OnInit {
   }
   
   get userInfo() {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('auth_token');
   if (!token) return null;
   const payload = JSON.parse(atob(token.split('.')[1]));
   return {
@@ -51,7 +51,7 @@ export class NavbarComponent implements OnInit {
 }
 
   get isAdmin(): boolean {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('auth_token');
     if (!token) return false;
     const payload = JSON.parse(atob(token.split('.')[1]));
     return payload.role === 'admin';
@@ -59,9 +59,10 @@ export class NavbarComponent implements OnInit {
 
   
   logout() {
-    localStorage.removeItem('token');
+    localStorage.removeItem('auth_token');
     this.showLogin = true;
     this.changeDetector.detectChanges();
+    this.cartService.clearCart();
     this.router.navigate(['/login']);
   }
 
