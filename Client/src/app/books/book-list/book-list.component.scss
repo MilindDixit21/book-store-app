@@ -39,6 +39,23 @@
 border-radius: 50px;
 
 }
+a.img-link{
+  text-transform: none;
+  text-align: center;
+  background: #f5f5f5;
+}
+.mat-mdc-card-title{
+  font-size: 12px;
+  line-height: normal;
+}
+.currency{
+  font-size: 12px;
+  font-weight: 600;
+  sup {
+    top: -0.3em;
+}
+}
+
 
 mat-card-actions {
   display: flex;
@@ -105,19 +122,20 @@ mat-card-actions {
     border: 1px solid #f1f1f1;
     border-radius: 3px 3px 0 0;
     width: 100%;
+    margin-bottom: 20px;
 
-  img {
-    height: 270px;
-    object-fit: cover;
-    border-radius: 3px 3px 0 0;
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
-  }
+    img {
+      height: 270px;
+      object-fit: cover;
+      border-radius: 3px 3px 0 0;
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+    }
 
-  .title-click {
-    cursor: pointer;
-    text-decoration: underline;
-    color: #3f51b5;
-  }
+    .title-click {
+      cursor: pointer;
+      text-decoration: underline;
+      color: #3f51b5;
+    }
 }
 
 
@@ -174,12 +192,18 @@ mat-raised-button {
 
 .book-card mat-card-actions button {
   padding: 4px 8px!important;
-  font-size: 12px;
+  font-size: 10px;
   height: 26px;
+  font-weight: 400;
   letter-spacing: normal;
+  background: #f3f3f3;
+  border-radius: 2px;
+  &:hover{
+    background: #3840af;
+    color: #f5f5f5;
+  }
 }
 mat-icon {
-      font-size: 14px !important;
     vertical-align: middle !important;
     margin-right: 2px !important;
 }
@@ -187,30 +211,35 @@ mat-icon {
 .universal-actions {
   display: flex;
   flex-direction: row;
-  justify-content:center ;
+  justify-content:space-between ;
   align-items: center;
-  padding: 4px 5px !important;
+  padding: 4px 0px !important;
   gap: 0.3rem;
   flex-wrap: wrap; // optional for responsive fallback
   margin-top: 0.1rem;
+      min-height: 35px;
       background-color: #ffffff;
     border-top: 1px solid #e5e5e5;
 
-  button {
-      min-width: 100%!important;
-    padding: 4px 10px;
-    font-size: 13px;
+    button {
+      padding: 4px 10px;
+      font-size: 13px;
+      border: none;
+    }
 
-  }
-
-  .mat-icon {
-    font-size: 14px !important;
-    line-height: 16px;
-  }
+    .mat-icon {
+      font-size: 10px !important;
+      line-height: 16px;
+      color: darkgray;
+      height: 15px;
+    }
+}
+.mat-mdc-card-content:last-child{
+  padding-bottom: 0px;
 }
 
 .mat-mdc-card-header{
-  padding: 5px 10px 0;
+  padding: 7px 10px 0;
 }
 .mat-mdc-card-content {
     padding: 0 10px;
@@ -234,8 +263,8 @@ mat-icon {
   }
 }
 .mat-mdc-card-subtitle{
-  font-size: 12px;
-  margin-bottom: 5px;
+  font-size: 11px;
+  margin-bottom: 2px;
 }
 
 

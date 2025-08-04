@@ -81,18 +81,6 @@ deleteBook(id?: string): void {
 
 }
 
-openBookDetails(book: Book): void {
-  console.log(`🔍 Opening details for: ${book.title}`);
-  this.dialog.open(BookDetailsDialogComponent, {
-    data: {
-      title: book.title,
-      summary: book.summary,
-      coverImage: book.coverImage
-    },
-    width: '600px'
-  });
-}
-
 getSnippet(text: string | undefined, limit: number = 65): string {
   if (!text) return '';
   const words = text.split(' ');
@@ -138,7 +126,7 @@ onGenreBlur(): void {
   }
 }
 
-addToCart(book: Book): void {
+sendToCart(book: Book): void {
   if(!book || !book._id || book.price === undefined){
     console.warn('cannot add this book to cart', book);
     this.toastService.error('cannot add this book to cart');
@@ -157,6 +145,12 @@ addToCart(book: Book): void {
   this.cartServivce.addToCart(cartItem);
   this.toastService.success('Book added to cart!');
    console.log(`🛒 Book added to cart: ${book.title}`);
+}
+
+
+getFormattedPrice(price: number): { dollars: string; cents: string } {
+  const [dollars, cents] = price.toFixed(2).split('.');
+  return { dollars, cents };
 }
 
 

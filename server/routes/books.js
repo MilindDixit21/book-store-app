@@ -15,6 +15,9 @@ router.get('/published', getPublishedBooks);
 router.post('/', auth, role('admin','editor'), upload.single('coverImage'), createBook);
 router.put('/:id', auth, role('admin','editor'), upload.single('coverImage'), updateBook);
 router.delete('/:id', auth, role('admin'), deleteBook);
-router.get('/:id', auth, role('admin', 'editor'), getBookById);
+// Admin route — restricted access
+router.get('/admin/:id', auth, role('admin', 'editor'), getBookById);
+// Public route — open access
+router.get('/public/:id', getBookById);
 
 export default router;

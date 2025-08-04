@@ -32,6 +32,8 @@ import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.c
 import { BookDetailsDialogComponent } from './shared/book-details-dialog/book-details-dialog.component';
 import { CartItemComponent } from './cart/cart-item/cart-item.component';
 import { CartComponent } from './cart/cart/cart.component';
+import { FooterComponent } from './shared/footer/footer.component';
+import { BookDetailsComponent } from './books/book-details/book-details.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,9 @@ import { CartComponent } from './cart/cart/cart.component';
     ConfirmDialogComponent,
     BookDetailsDialogComponent,
     CartItemComponent,
-    CartComponent
+    CartComponent,
+    FooterComponent,
+    BookDetailsComponent
   ],
   imports: [
     BrowserModule,

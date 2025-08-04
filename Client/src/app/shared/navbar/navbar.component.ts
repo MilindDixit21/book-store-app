@@ -66,10 +66,21 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  public get showBackToBooks(): boolean {
+  public get showBackToBooks_old(): boolean {
   const route = this.router.url;
   return route.includes('/books/new') || route.includes('/books/') && route.includes('/edit');
 }
+
+public get showBackToBooks(): boolean {
+  const route = this.router.url;
+
+  const isEditPage = route.includes('/books/') && route.includes('/edit');
+  const isNewBookPage = route.includes('/books/new');
+  const isBookDetailsPage = route.startsWith('/books/public/') && route.split('/').length === 4;
+
+  return isNewBookPage || isEditPage || isBookDetailsPage;
+}
+
 
 
 }

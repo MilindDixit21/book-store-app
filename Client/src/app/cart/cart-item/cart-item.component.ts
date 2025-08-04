@@ -7,7 +7,7 @@ import { CartService } from 'src/app/services/cart.service';
   templateUrl: './cart-item.component.html',
   styleUrls: ['./cart-item.component.scss']
 })
-export class CartItemComponent {
+export class CartItemComponent{
 
   @Input() item!: CartItem;
 @Output() adjust = new EventEmitter<{ id: string; delta: number }>();
@@ -15,7 +15,11 @@ export class CartItemComponent {
 
 constructor(private cartService: CartService){}
 
+
 adjustQuantity(delta: number): void {
+
+  console.log('delta: ', delta);
+  
 
   if (this.item.quantity === 1 && delta === -1) {
     this.remove.emit({id:this.item._id, quantity:this.item.quantity}); // Remove item instead of adjusting

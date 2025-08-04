@@ -1,9 +1,25 @@
 .dialog-content {
   text-align: center;
+  padding-top: 5px;
 }
-
+.mat-mdc-dialog-actions{
+  position: absolute;
+  top: 0px;
+  right: 10px;
+}
+.close{
+    font-size: 15px;
+    font-weight: 600;
+    color: darkgray;
+    // border: 1px solid;
+    // border-radius: 6px;
+    padding: 0px 4px 4px;
+    &:hover{
+      color: black;
+    }
+}
 .cover-large {
-  width: 200px;
+  width: 400px;
   height: auto;
   margin: 1rem 0;
   border-radius: 4px;

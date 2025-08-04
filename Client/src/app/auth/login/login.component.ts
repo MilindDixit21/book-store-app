@@ -31,8 +31,8 @@ export class LoginComponent {
         localStorage.setItem('user_session', JSON.stringify(res)); //  Save full user info
         // alert('Login successful');
 
-        //Emit login state reactively
-        // this.authService.emitLogin(); // not implemented yet*
+        // Emit login state reactively
+        this.authService.emitLogin(); 
 
         // Load guest cart from localStorage
         let guestCart:CartItem[]=[];
@@ -58,8 +58,16 @@ console.log('Login component:serverCart: ', serverCart);
                 next:()=>{
                   console.log("login component: reached here");
                   
+                   // Clear guest cart (already merged)
                   localStorage.removeItem('cart_guest');
+                  
+                  // Push merged cart locally so UI updates
                   this.cartService.addToCart(merged); 
+
+                   // Load latest cart from MongoDB and hydrate local state
+                  this.cartService.loadServerCartToLocal();
+                  
+                  // Continue to next view
                   this.router.navigate(['/books']);
                 },
                  error:(err) =>{

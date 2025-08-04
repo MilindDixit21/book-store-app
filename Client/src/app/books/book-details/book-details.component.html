@@ -1,0 +1,59 @@
+<!-- book-details.component.html -->
+<div class="container book-details-page py-3" *ngIf="book">
+  <div class="row">
+    <div class="col-sm-5 leftCol text-center ps-3">
+      <img
+        [src]="
+          book.coverImage
+            ? 'http://localhost:3000/' + book.coverImage
+            : 'assets/images/placeholder.jpg'
+        "
+        alt="Book Cover"
+        class="book-cover"
+        (click)="openBookDetails(book)"
+      />
+    </div>
+    <div class="col-sm-7 rightCol text-start ps-3">
+      <h2>{{ book.title }}</h2>
+      <h4>by {{ book.author }}</h4>
+      <div class="price-offer">
+        <p class="sub-heading">Paperback</p>
+        <span class="mb-3 price">{{ book.price | currency }}</span>
+        <p class="offer">🛈 Premium Members get an additional <strong>10%</strong> off AND collect stamps to save with <strong>Rewards</strong>.</p>
+      </div>
+      <div class="action">
+        <div class="shipping">
+          <div class="left">
+            <div class="heading">SHIP THIS ITEM</div>
+            <p>In stock. Ships in 1-2 days.</p>
+          </div>
+          <div class="right">
+            <button class="btn btn-success" [disabled]="!book" (click)="addToCart()">
+            Add to Cart
+          </button>
+          </div>
+          
+        </div>
+        <div class="pickup">
+          <div class="left">
+            <div class="heading">SHIP THIS ITEM</div>
+            <p>In stock. Ships in 1-2 days.</p>
+          </div>
+          <div class="right">
+          <button class="btn btn-success" [disabled]="!store" (click)="findStore()">
+        Find in Store
+      </button>
+      </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col">
+       <h2>Overview</h2>
+      <div class="summary">
+        <p>{{ book.summary }}</p>
+      </div>
+    </div>
+  </div>
+</div>

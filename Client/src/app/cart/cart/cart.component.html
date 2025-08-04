@@ -2,24 +2,29 @@
   <!-- Left Column: Scrollable Items -->
   <div class="cart-items">
 
-    <div class="empty-cart" *ngIf="items.length === 0">
-  <mat-icon>shopping_cart</mat-icon>
-  <p>Your cart is empty.</p>
+    <div *ngIf="isCartEmpty" class="empty-cart empty-cart-message ">
+      <mat-icon>shopping_cart</mat-icon>
+  <p>Your cart is currently empty.</p>
+   <button mat-button color="primary" class="btn-continue-shopping" [routerLink]="['/books']">
+    Return to Book Store
+  </button>
 </div>
 
 
-    <app-cart-item
-      *ngFor="let item of items"
-      [item]="item"
-      (adjust)="updateQuantity($event)"
-      (remove)="removeItem($event)">
-    </app-cart-item>
-    <div class="subtotal" *ngIf="items.length">Subtotal ({{totalItems}} items): <strong>{{ subtotal|currency}}</strong></div>
+
+    <app-cart-item *ngFor="let item of cartItems" [item]="item" 
+    (adjust)="updateQuantity($event)" 
+    (remove)="removeItem($event)">
+  </app-cart-item>
+    <div class="subtotal" *ngIf="cartItems.length">
+      Subtotal ({{ totalItems }} items):
+      <strong>{{ subtotal | currency }}</strong>
+    </div>
   </div>
 
   <!-- Right Column: Fixed Summary -->
-  <div class="cart-summary" *ngIf="items.length">
-    <table >
+  <div class="cart-summary" *ngIf="cartItems.length">
+    <table>
       <tr>
         <td>Subtotal</td>
         <td>${{ subtotal }}</td>
@@ -42,9 +47,10 @@
       </tr>
     </table>
 
-    <button mat-raised-button color="primary" class="checkout-btn">
+    <button mat-raised-button color="primary" class="checkout-btn" [disabled]="!cartItems.length">
       Proceed to Checkout
     </button>
+    
+
   </div>
 </div>
-

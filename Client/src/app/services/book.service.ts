@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Book } from '../models/book.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -37,13 +38,20 @@ deleteBook(id: string) {
   });
 }
 
-getBookById(id: string) {
+getBookById(id: string): Observable<Book> {
   const token = localStorage.getItem('auth_token');
-  const headers = {
-    Authorization: `Bearer ${token}`
-  };
-  return this.http.get<Book>(`${this.apiBooksUrl}/${id}`, { headers });
+  const userRole = localStorage.getItem('user_role');
+  const headers = token
+    ? new HttpHeaders({ Authorization: `Bearer ${token}` })
+    : new HttpHeaders(); // still valid even without token
+  const routePrefix = token && ['admin', 'editor'].includes(userRole || '')
+    ? 'admin'
+    : 'public';
+  const url = `${this.apiBooksUrl}/${routePrefix}/${id}`;
+  return this.http.get<Book>(url, {
+    headers,
+    responseType: 'json' // 👈 This ensures type inference aligns with `Book`
+  });
 }
-
 
 }

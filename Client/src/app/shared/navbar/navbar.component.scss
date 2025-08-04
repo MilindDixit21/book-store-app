@@ -16,3 +16,22 @@ a{
   margin: 0.2rem 0;
   padding-left: 1rem;
 }
+
+
+a.breadcrumb-link{
+  position: relative;
+  font-size: 10px;
+  display: inline;  
+  text-decoration: none; 
+  color:gray;
+  padding-left: 3px;
+  &:hover{
+    color:black;
+  }
+  .mat-icon{
+    font-size: 11px;
+    position: absolute;
+    top: 1.5px;
+    left:-10px;
+  }
+}

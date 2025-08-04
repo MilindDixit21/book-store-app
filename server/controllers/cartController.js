@@ -13,7 +13,7 @@ export async function getCartForUser(req, res) {
 export async function saveCartToMongo(req, res) {
   console.log('✅ cartController received userId:', req.user?._id);
 
-  const userId = req.user?._id;
+  const userId = req.user?._id; // decoded from jwt
   if(!userId){
     return res.status(401).json({message: 'user not authenticated'});
   }
@@ -22,15 +22,20 @@ export async function saveCartToMongo(req, res) {
     return res.status(400).json({ message: 'Invalid items array' });
   }
   try {
-    let cart = await Cart.findOne({ userId: req.user._id });
+    let cart = await Cart.findOne({ userId });
     if (!cart) {
       cart = new Cart({ userId: req.user._id, items: [] });
     }
     for (const incoming of items) {
-      if (!incoming._id || !incoming.quantity) continue;
-      const index = cart.items.findIndex(i => i.bookId.toString() === incoming._id);
+      if (!incoming._id || typeof incoming.quantity !== 'number') continue;
+
+      const index = cart.items.findIndex(
+        i => i.bookId.toString() === incoming._id
+      );
       if (index !== -1) {
-        cart.items[index].quantity += incoming.quantity;
+        // replace quantity instead of incrementing 
+        // cart.items[index].quantity += incoming.quantity; // incrementing
+        cart.items[index].quantity = incoming.quantity;
       } else {
         cart.items.push({ bookId: incoming._id, quantity: incoming.quantity });
       }

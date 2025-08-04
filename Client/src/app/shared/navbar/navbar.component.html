@@ -2,7 +2,9 @@
   <span> <a routerLink="/books" style="color: rgb(255, 255, 255);text-decoration: none;">📚 BookStore App </a></span>
   <span class="spacer"></span>
 
-  <a mat-button routerLink="/books">Books</a>
+  <a mat-button routerLink="/books">Browse Books</a>
+  <a mat-button routerLink="/about">About Us</a>
+  <a mat-button routerLink="/contact">Contact </a>
   <button mat-button [routerLink]="['/cart']">Cart [{{totalItems}}]</button>
  
   <a *ngIf="showLogin" mat-button routerLink="/login">Login</a>
@@ -23,9 +25,11 @@
 </mat-toolbar>
 
 <div *ngIf="showBackToBooks" class="breadcrumb-nav">
-  <button mat-button color="accent" [routerLink]="['/books']">
+  <!-- <button mat-button color="accent" [routerLink]="['/books']">
     ← Back to Books
-  </button>
+  </button> -->
+  <a class="breadcrumb-link" routerLink="/books"><mat-icon>home</mat-icon> Home</a> &#xbb; <a class="breadcrumb-link" [routerLink]="['/books']">Books</a>
+
 </div>
 
 <!-- 

@@ -52,10 +52,34 @@ export const deleteBook = async (req, res) => {
 };
 
 //getBookById
-export const getBookById = async (req, res) => {
+export const getBookById_old = async (req, res) => {
   const book = await Book.findById(req.params.id);
   if (!book) return res.status(404).json({ message: 'Book not found' });
   res.json(book);
+};
+
+export const getBookById = async (req, res) => {
+  const { id } = req.params;
+  const userRole = req.user?.role || 'guest';
+
+  const book = await Book.findById(id);
+
+  if (!book) return res.status(404).json({ message: 'Book not found' });
+
+  if (userRole === 'admin' || userRole === 'editor') {
+    // return res.json({ ...book.toObject(), internalNotes: book.internalNotes });
+    return res.json(book);
+  }
+
+  // Strip sensitive info for guests/editors
+  return res.json({
+    _id:book._id,
+    title: book.title,
+    author: book.author,
+    summary: book.summary,
+    price: book.price,
+    coverImage:book.coverImage
+  });
 };
 
 

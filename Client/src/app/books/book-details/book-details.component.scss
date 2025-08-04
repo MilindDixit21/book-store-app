@@ -1,0 +1,83 @@
+.book-details-page{
+    font-size: 11px;
+    h2{
+        font-size: 15px;
+        margin-bottom: 5px;
+    }
+    h4{
+        font-size: 11px;
+        line-height: normal;
+        margin-bottom: 5px;
+        color: gray;
+    }
+    hr{
+        border: none;
+        border-bottom: 1px solid red;
+        height: 0px;
+        margin: 0 0 5px 0;
+    }
+}
+.book-cover{
+    max-width: 250px;
+    border-radius: 2px;
+}
+.price-offer {
+     padding: 15px 3px;
+    border: 1px solid gray;
+    border-width: 1px 0;
+    margin: 15px 0 30px;
+
+    .price{
+    font-size: 21px;
+    font-weight: 500;
+    letter-spacing: 0.05rem;
+    display: inline-block;
+    }
+    p{
+        font-size: 12px;
+        line-height: normal;
+        margin-bottom: 5px;
+        strong{
+            font-weight: 600;
+        }
+        &.sub-heading{
+        font-weight: 500;
+        line-height: 16px;
+        margin-bottom: 5px;
+        }
+        &.offer{
+            color: #3a3a3a;
+        }
+
+    }
+}
+.summary{
+    border: 1px solid gray;
+    padding: 15px;
+
+}
+
+.action{
+border: 1px solid #3a3a3a;
+    .shipping,.pickup{
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    .btn{
+        margin-top: 10px;
+        min-width: 140px;
+
+    }
+    .heading{
+        font-weight: 600;
+    }
+    p{
+        margin: 0;
+
+    }
+    }
+    .shipping{
+        border-bottom: 1px solid #3a3a3a;
+    }
+    
+}

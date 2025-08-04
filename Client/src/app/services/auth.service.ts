@@ -15,6 +15,11 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
+    getToken(): string | null {
+    return localStorage.getItem('auth_token');
+  }
+
+
   private hasToken(): boolean {
     return !!localStorage.getItem('auth_token');
   }
@@ -36,10 +41,6 @@ export class AuthService {
 
   register(user: User): Observable<User> {
     return this.http.post<User>(`${this.apiUrl}/register`, user);
-  }
-
-  getToken(): string | null {
-    return localStorage.getItem('auth_token');
   }
 
   getCurrentUser(): User | null {
