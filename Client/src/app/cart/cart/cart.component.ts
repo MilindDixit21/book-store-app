@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CartItem } from 'src/app/models/cart.model';
 import { CartService } from '../../services/cart.service';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-cart',
@@ -17,7 +20,12 @@ export class CartComponent implements OnInit {
   tax = 0;
   estimatedTotal = 0;
 
-  constructor(private cartService: CartService) {}
+  constructor(
+    private cartService: CartService,
+    private http: HttpClient,
+    private router: Router,
+    private toastServivce: ToastService
+  ) {}
 
   ngOnInit(): void {
     this.cartService.getCart().subscribe((items) => {
@@ -50,7 +58,6 @@ export class CartComponent implements OnInit {
     }
     // console.log('remove item > event:id :', event.id);
     // console.log('remove item > event:quantity :', event.quantity);
-
     this.cartService.removeFromCart(event.id, event.quantity);
   }
 
@@ -66,10 +73,19 @@ export class CartComponent implements OnInit {
       this.tax -
       this.discount
     ).toFixed(2);
-
-    console.log(
-      `subtotal: ${this.subtotal}, tax: ${this.tax}, estimatedTotal: ${this.estimatedTotal}`
-    );
   }
-  
+
+  checkoutCart(): void {
+    this.cartService.checkoutCart().subscribe({
+      next: (orderId: string) => {
+        console.log('Order placed, ID:', orderId);
+        this.router.navigate(['/payment'], {
+          queryParams: { orderId },
+        });
+      },
+      error: (err: any) => {
+        console.error('Checkout failed:', err.message || err);
+      },
+    });
+  }
 }

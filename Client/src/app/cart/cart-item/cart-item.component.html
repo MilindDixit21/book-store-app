@@ -7,7 +7,7 @@
   <div class="cart-details">
     <h4>{{ item.title }}</h4>
     <p class="author">by {{ item.author || 'Unknown' }}</p>
-    <p>summary:{{item.summary}}</p>
+    <p class="mb-2">summary:{{item.summary | slice:0:80}}...</p>
 
     <div class="quantity-controls">
       <div class="btn-group">

@@ -34,6 +34,8 @@ import { CartItemComponent } from './cart/cart-item/cart-item.component';
 import { CartComponent } from './cart/cart/cart.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { BookDetailsComponent } from './books/book-details/book-details.component';
+import { PaymentComponent } from './payment/payment.component';
+import { ThankYouComponent } from './payment/thank-you/thank-you.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +52,9 @@ import { BookDetailsComponent } from './books/book-details/book-details.componen
     CartItemComponent,
     CartComponent,
     FooterComponent,
-    BookDetailsComponent
+    BookDetailsComponent,
+    PaymentComponent,
+    ThankYouComponent
   ],
   imports: [
     BrowserModule,

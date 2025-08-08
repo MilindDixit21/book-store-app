@@ -8,6 +8,9 @@ import mongoose from 'mongoose';
 import userRoutes from './routes/users.js';
 import bookRoutes from './routes/books.js';
 import cartRoutes from './routes/carts.js';
+import orderRoutes from './routes/orders.js';
+import paymentsRoute from './routes/payments.js';
+import notificationRoute from './routes/notifications.js';
 
 const app = express();
 
@@ -26,6 +29,10 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/api/users/', userRoutes);
 app.use('/api/books/', bookRoutes);
 app.use('/api/cart/', cartRoutes);
+app.use('/api/orders/',orderRoutes);
+app.use('/api/payments/',paymentsRoute);
+app.use('/api/notifications/', notificationRoute);
+
 
 //server
 const PORT = process.env.PORT;

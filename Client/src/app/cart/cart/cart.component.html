@@ -10,8 +10,6 @@
   </button>
 </div>
 
-
-
     <app-cart-item *ngFor="let item of cartItems" [item]="item" 
     (adjust)="updateQuantity($event)" 
     (remove)="removeItem($event)">
@@ -27,7 +25,7 @@
     <table>
       <tr>
         <td>Subtotal</td>
-        <td>${{ subtotal }}</td>
+        <td>${{ subtotal | number:'1.2-2' }}</td>
       </tr>
       <tr>
         <td>Shipping</td>
@@ -47,7 +45,7 @@
       </tr>
     </table>
 
-    <button mat-raised-button color="primary" class="checkout-btn" [disabled]="!cartItems.length">
+    <button (click)="checkoutCart()" mat-raised-button color="primary" class="checkout-btn" [disabled]="!cartItems.length">
       Proceed to Checkout
     </button>
     

@@ -1,12 +1,50 @@
-<h1>Login</h1>
-<form (ngSubmit)="submit()">
-  <input [(ngModel)]="credentials.email" name="email" placeholder="Email" required>
-  <input [(ngModel)]="credentials.password" name="password" placeholder="Password" type="password" required>
-  <button type="submit">Login</button>
-</form>
+<div class="container my-5 bg">
+  <div class="row justify-content-end">
+    <div class="col-sm-4 right">
 
-<p class="form-footer">
-  Don't have an account?
-  <a routerLink="/register">Register here</a>
+<main class="form-signin">
+  <form (ngSubmit)="submit()">
+    <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+    <div class="msg-wrapper">
+    <div *ngIf="loginError" class="error-message">
+          {{ loginError }}
+        </div>
+    </div>
+    <div class="form-floating">
+       <input
+            [(ngModel)]="credentials.email"
+            name="email"
+            type="email"
+            required
+            class="form-control"
+          />
+      <label for="floatingInput">Email address</label>
+    </div>
+    <div class="form-floating password-field">
+       <input
+            [(ngModel)]="credentials.password"
+            name="password"
+            [type]="showPassword ?'text': 'password'"
+            required
+            class="form-control"
+          />        
+    <mat-icon (click)="togglePassword()" class="toggle-btn">{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        <label for="floatingPassword">Password</label>
+    </div>
+    <div class="checkbox mb-3">
+      <label>
+        <input type="checkbox" value="remember-me"> Remember me
+      </label>
+    </div>
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+    <p class="form-footer">Don't have an account? <a routerLink="/register">Register here</a>
 </p>
+  </form>
+  
+</main>
+
+</div>
+  </div>
+</div>
+
 

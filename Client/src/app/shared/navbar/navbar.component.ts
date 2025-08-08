@@ -77,8 +77,10 @@ public get showBackToBooks(): boolean {
   const isEditPage = route.includes('/books/') && route.includes('/edit');
   const isNewBookPage = route.includes('/books/new');
   const isBookDetailsPage = route.startsWith('/books/public/') && route.split('/').length === 4;
+  const isCartPage = route.includes('/cart');
+  const isThanksPage = route.includes('/thank-you');
 
-  return isNewBookPage || isEditPage || isBookDetailsPage;
+  return isNewBookPage || isEditPage || isBookDetailsPage || isCartPage || isThanksPage;
 }
 
 

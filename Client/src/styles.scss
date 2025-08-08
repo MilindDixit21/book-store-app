@@ -49,3 +49,20 @@ body {
   padding: 4px 8px;
   font-size: 13px;
 }
+
+.mat-mdc-snack-bar-container .mdc-snackbar__surface{
+  background-color:transparent!important;
+  box-shadow: none!important;
+}
+
+.success-snackbar, .mat-mdc-simple-snack-bar {
+  background-color: #7371ff  !important;
+  color: #fff !important;
+  font-weight: bold;
+  border-radius: 6px;
+  box-shadow: 1px 0px 10px rgb(0 0 0 / 41%);
+}
+.mat-mdc-snack-bar-container .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled){
+  color:#ecff4f!important;
+}
+

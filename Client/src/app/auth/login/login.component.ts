@@ -18,22 +18,30 @@ export class LoginComponent {
 
   loading = false;
   errorMessage:string ='';
+  loginError = '';
 
    constructor(private authService: AuthService, private cartService:CartService, private router:Router) {}
+
+showPassword = false;
+password = '';
+
+togglePassword(): void {
+  this.showPassword = !this.showPassword;
+}
+
 
   submit() :void{
     this.loading =true;
     this.errorMessage='';
     this.authService.login(this.credentials).subscribe({
       next: (res: any) => {
-        this.authService.emitLogin();
+        console.log('LoginComponent:res from login > form submit :',JSON.stringify(res));
+        
         localStorage.setItem('auth_token', res.token); // save JWT
         localStorage.setItem('user_session', JSON.stringify(res)); //  Save full user info
-        // alert('Login successful');
-
-        // Emit login state reactively
-        this.authService.emitLogin(); 
-
+        
+        this.authService.emitLogin();
+        this.authService.setUserIdFromToken();
         // Load guest cart from localStorage
         let guestCart:CartItem[]=[];
         try {
@@ -86,6 +94,7 @@ console.log('Login component:serverCart: ', serverCart);
       error: (err) =>{
         console.error('Login failed:', err);
         this.errorMessage = err?.error?.message || 'Invalid email or password';
+        this.loginError ='**Invalid email or password. Please double-check your credentials and try again.';
         this.loading = false;        
       }
     });

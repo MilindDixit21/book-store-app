@@ -65,7 +65,7 @@ border: 1px solid #3a3a3a;
     justify-content: space-between;
     .btn{
         margin-top: 10px;
-        min-width: 140px;
+        min-width: 210px;
 
     }
     .heading{
@@ -80,4 +80,14 @@ border: 1px solid #3a3a3a;
         border-bottom: 1px solid #3a3a3a;
     }
     
+}
+
+.btn{
+    background-color:#3e4e97;
+    &:hover{
+        background-color: #3d50a7;
+    }
+    &.notify{
+        background-color: #855a42;
+    }
 }

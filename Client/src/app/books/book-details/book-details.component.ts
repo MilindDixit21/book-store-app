@@ -3,8 +3,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Book } from 'src/app/models/book.model';
 import { CartItem } from 'src/app/models/cart.model';
+import { AuthService } from 'src/app/services/auth.service';
 import { BookService } from 'src/app/services/book.service';
 import { CartService } from 'src/app/services/cart.service';
+import { EmailNotificationService } from 'src/app/services/email-notification.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { BookDetailsDialogComponent } from 'src/app/shared/book-details-dialog/book-details-dialog.component';
 
@@ -17,18 +19,24 @@ export class BookDetailsComponent implements OnInit {
 
   book!: Book;
   store:boolean = false;
+  
 
   constructor(
     private route: ActivatedRoute,
     private bookService: BookService,
     private cartService: CartService,
+    private authService: AuthService,
     private toastService: ToastService,
+    private notificationService: EmailNotificationService,
     private dialog:MatDialog
   ) {}
 
   ngOnInit(): void {
+        
     const bookId = this.route.snapshot.paramMap.get('id');
     console.log('book id: ',bookId);
+    console.log(typeof(bookId));
+    
     
     if (bookId) {
       this.bookService.getBookById(bookId).subscribe({
@@ -78,5 +86,25 @@ export class BookDetailsComponent implements OnInit {
       },
       width: '500px'
     });
+  }
+
+  notifyMe():void{
+    const userName = this.authService.getUserName();
+    const bookTitle = this.book.title;
+    const bookId = this.book._id;
+    const userEmail = this.authService.getUserEmail();
+    if(!userName || !bookTitle || !bookId || !userEmail){
+      console.error('Missing bookId or userEmail');
+      return;
+    }
+    this.notificationService.createNotification(userName, bookTitle, bookId, userEmail).subscribe({
+      next: () => 
+        this.toastService.success('Notification request sent!'),
+      error:(err: any) =>{
+        console.error('Notification error', err);
+        this.toastService.error('Failed to create email notification');
+      }
+    });
+    
   }
 }

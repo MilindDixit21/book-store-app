@@ -1,4 +1,5 @@
 import Cart from '../models/cartModel.js';
+import Book from '../models/bookModel.js';
 
 export async function getCartForUser(req, res) {
   try {
@@ -37,7 +38,15 @@ export async function saveCartToMongo(req, res) {
         // cart.items[index].quantity += incoming.quantity; // incrementing
         cart.items[index].quantity = incoming.quantity;
       } else {
-        cart.items.push({ bookId: incoming._id, quantity: incoming.quantity });
+        // ✅ Fetch price from Book model
+        const book = await Book.findById(incoming._id).select('price');
+        if (!book) continue; // skip if book not found
+
+        cart.items.push({ 
+          bookId: incoming._id, 
+          quantity: incoming.quantity,
+          price: book.price,
+         });
       }
     }
     await cart.save();
@@ -107,3 +116,6 @@ export async function updateItemQuantity(req, res) {
     res.status(500).json({ message: 'Failed to update item', error: err.message });
   }
 }
+
+
+

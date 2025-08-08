@@ -24,7 +24,7 @@ export class BookFormComponent implements OnInit {
     private bookService: BookService
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void { 
     this.id = this.route.snapshot.paramMap.get('id') ?? '';
     this.isEditMode = !!this.id;
 
@@ -32,7 +32,7 @@ export class BookFormComponent implements OnInit {
       title: ['', Validators.required],
       price: ['', Validators.required],
       author: ['', Validators.required],
-      genre: [''],
+      genre: ['', Validators.required],
       publishDate: [''],
       ISBN: [''],
       summary: ['', Validators.maxLength(500)],

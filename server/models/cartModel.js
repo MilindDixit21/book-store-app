@@ -14,7 +14,10 @@ const cartItemSchema = new mongoose.Schema(
       },
     title: String, // optional
     author: String, // optional
-    price: Number, // optional
+    price : {
+      type: Number, 
+      required:true
+    },
     coverImage: String, // optional, e.g. image URL
   },
   { _id: false }

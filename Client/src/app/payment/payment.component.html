@@ -1,0 +1,48 @@
+<div class="payment-container">
+  <h2>Checkout</h2>
+
+  <div class="total-amount">Total: ${{ totalAmount }}</div>
+
+  <form class="card-form" #paymentForm="ngForm" (ngSubmit)="submitPayment(paymentForm)">
+
+    <div class="form-group">
+      <label>First Name</label>
+      <input [(ngModel)]="formData.firstName" value="test" name="firstName" required />
+    </div>
+
+    <div class="form-group">
+      <label>Last Name</label>
+      <input [(ngModel)]="formData.lastName" value="user" name="lastName" required />
+    </div>
+
+    <div class="form-group">
+      <label>Card Number</label>
+      <input [(ngModel)]="formData.cardNumber" value="123" name="cardNumber" maxlength="16" required />
+    </div>
+
+    <div class="form-group">
+      <label>CVV</label>
+      <input [(ngModel)]="formData.cvv" value="123" name="cvv" maxlength="4" required />
+    </div>
+
+    <div class="form-group">
+      <label>Valid Until:</label>
+      <div class="valid-date">
+        <select [(ngModel)]="formData.validMonth" name="validMonth">
+          <option value="" disabled selected>Month</option>
+          <option *ngFor="let month of months" [value]="month">{{ month }}</option>
+        </select>
+
+        <select [(ngModel)]="formData.validYear" name="validYear">
+          <option value="" disabled selected>Year</option>
+          <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button type="button" (click)="cancel()">Cancel</button>
+      <button type="submit">Submit</button>
+    </div>
+  </form>
+</div>

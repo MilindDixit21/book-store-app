@@ -76,9 +76,6 @@
     </mat-error>
     </mat-form-field>
     
-
-   
-
     <input type="file" (change)="onFileChange($event)" accept="image/*" />
     <div *ngIf="previewUrl" class="image-preview">
       <img [src]="previewUrl" alt="Cover preview" width="150" />
@@ -88,8 +85,7 @@
   </mat-card-content>
 
   <mat-card-actions>
-    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="bookForm.invalid">Save</button>
-&nbsp;
+    <button mat-raised-button class="me-2" color="primary" (click)="onSubmit()" [disabled]="bookForm.invalid">Save</button>
     <button mat-raised-button color="warn" (click)="router.navigate(['/books'])">Cancel</button>
   </mat-card-actions>
 

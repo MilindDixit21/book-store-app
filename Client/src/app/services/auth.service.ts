@@ -12,11 +12,36 @@ export class AuthService {
   // holds login state
   private loggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
   public isLoggedIn$ = this.loggedInSubject.asObservable();
+  public userId$ = new BehaviorSubject<string | null>(null);
+
 
   constructor(private http: HttpClient) {}
 
-    getToken(): string | null {
+  getToken(): string | null {
     return localStorage.getItem('auth_token');
+  }
+
+  Old_setUserIdFromToken(): void {    
+  const token = localStorage.getItem('auth_token');
+  const payload = token ? JSON.parse(atob(token.split('.')[1])) : null;
+  this.userId$.next(payload?._id ?? null);
+}
+
+setUserIdFromToken(): void {
+  const token = localStorage.getItem('auth_token');
+  try {
+    const payload = token ? JSON.parse(atob(token.split('.')[1])) : null;
+    const userId = payload?._id ?? this.getUserId(); // fallback to session
+    this.userId$.next(userId);
+  } catch (err) {
+    console.warn('Invalid token format:', err);
+    this.userId$.next(this.getUserId()); // fallback
+  }
+}
+
+
+  getUserIdObservable(): Observable<string | null> {
+  return this.userId$.asObservable();
   }
 
 
@@ -43,14 +68,42 @@ export class AuthService {
     return this.http.post<User>(`${this.apiUrl}/register`, user);
   }
 
-  getCurrentUser(): User | null {
-    const raw = localStorage.getItem('user_session');
-    return raw ? JSON.parse(raw) as User : null;
+getCurrentUser(): User | null {
+  const raw = localStorage.getItem('user_session');
+  try {
+    const session = raw ? JSON.parse(raw) : null;
+    // If session has email, assume it's already decoded
+    if (session?.email) return session as User;
+    // If session already has a name, return it
+     if (session?.username) return session.username;
+    // Otherwise decode the token
+    const token = session?.token;
+    if (!token) return null;
+    const payload = token.split('.')[1];
+    const decoded = JSON.parse(atob(payload));
+    // Merge decoded payload with token
+    const enrichedUser = { ...decoded, token };
+    localStorage.setItem('user_session', JSON.stringify(enrichedUser));
+    return enrichedUser as User;
+  } catch (err) {
+    console.error('Failed to parse or decode user_session:', err);
+    return null;
   }
+}
 
   getUserId(): string | null {
-    const user = this.getCurrentUser();
+    const user = this.getCurrentUser();   
     return user?._id ?? null;
+  }
+
+  getUserName(): string | null {
+    const user = this.getCurrentUser();   
+    return user?.username ?? null;
+  }
+
+  getUserEmail(): string | null {
+    const user = this.getCurrentUser();
+    return user?.email ?? null;
   }
   
 }
