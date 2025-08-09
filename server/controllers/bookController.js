@@ -67,8 +67,8 @@ export const getBookById = async (req, res) => {
   if (!book) return res.status(404).json({ message: 'Book not found' });
 
   if (userRole === 'admin' || userRole === 'editor') {
-    // return res.json({ ...book.toObject(), internalNotes: book.internalNotes });
-    return res.json(book);
+    return res.json({ ...book.toObject(), internalNotes: book.internalNotes });
+    // return res.json(book);
   }
 
   // Strip sensitive info for guests/editors
@@ -76,8 +76,11 @@ export const getBookById = async (req, res) => {
     _id:book._id,
     title: book.title,
     author: book.author,
+    genre: book.genre,
     summary: book.summary,
+    ISBN: book.ISBN,
     price: book.price,
+
     coverImage:book.coverImage
   });
 };

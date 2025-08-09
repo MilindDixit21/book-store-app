@@ -41,6 +41,8 @@ export class BookFormComponent implements OnInit {
 
     if (this.isEditMode) {
       this.bookService.getBookById(this.id).subscribe((book) => {
+        console.log('📚 Book fetched:', book);
+        console.log('📖 Genre value:', book.genre);
         this.bookForm.patchValue(book);
       });
     }
