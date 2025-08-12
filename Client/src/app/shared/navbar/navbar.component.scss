@@ -16,7 +16,29 @@ a{
   margin: 0.2rem 0;
   padding-left: 1rem;
 }
+a.greetings{
+  font-size: 12px;
+  letter-spacing: .03em;
+  font-weight: 300;
+}
+.cart{
+  position: relative;
 
+  .itemTotal{
+    position: absolute;
+    border: 0px solid black;
+    top: -23px;
+    left: -16px;
+    width: 24px;
+    height: 24px;
+    line-height: 12px;
+    padding: 6px 4px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 30px;
+    font-size: 10px;
+    font-weight: 300;
+  }
+}
 
 a.breadcrumb-link{
   position: relative;
@@ -35,3 +57,10 @@ a.breadcrumb-link{
     left:-10px;
   }
 }
+
+
+
+
+
+
+

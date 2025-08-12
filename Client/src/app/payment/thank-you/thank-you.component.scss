@@ -1,11 +1,31 @@
 .check{
     display:inline-block;
-    font-size: 40px;
+    font-size: 34px;
     font-weight: 600;
-    line-height: 32px;
-    padding: 20px 22px;
+    line-height: 34px;
+    padding: 8px 12px;
     border-radius: 50%;
     color: green;
-    border: 5px solid green;
+    border: 3px solid green;
     margin-bottom: 10px;
+}
+h3{
+    font-weight: 500;
+}
+a{
+    font-size: 0.8rem;
+    text-decoration: none;
+    color:rgb(37, 77, 179)
+
+}
+.header-info {
+    display: flex;
+    justify-content: space-between;
+}
+table, .header-info{
+    width: 80%;
+    margin: auto;
+}
+.header-info{
+    padding: 10px 0px 0px;
 }

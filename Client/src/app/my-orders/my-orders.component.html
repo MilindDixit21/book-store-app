@@ -1,0 +1,38 @@
+<div class="orders-container">
+  <h2>My Orders</h2>
+
+  <div *ngFor="let order of orders" class="order-card">
+    <div class="order-header">
+      <span>Order #{{ order._id }}</span>
+      <span>Status: <strong>{{ order.status }}</strong></span>
+      <span>Placed: {{ order.createdAt | date:'medium' }}</span>
+    </div>
+
+    <table class="order-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Qty</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of order.items">
+          <td>{{ item.title }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>${{ item.price }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="order-footer">
+      <span>Total: <strong>${{ order.total | number:'1.2-2' }}</strong></span>
+      <span class="text-end">
+      <button [disabled]="!isCancellable(order)" (click)="cancel(order)" class="cancel-btn">
+        Cancel Order
+      </button>
+      <div *ngIf="isCancellable" class="message" >( Cancel this order till : {{order.cancellableUntil | date: 'medium'}})</div>
+      </span>
+    </div>
+  </div>
+</div>

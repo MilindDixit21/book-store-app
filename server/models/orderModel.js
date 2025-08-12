@@ -28,6 +28,18 @@ const orderSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  shipping: { 
+    type: Number, 
+    default: 0 
+  },
+  tax: { 
+    type: Number, 
+    default: 0 
+  },
+  discount: { 
+    type: Number, 
+    default: 0 
+  },
   status: {
     type: String,
     enum: ['created', 'shipped', 'cancelled'],

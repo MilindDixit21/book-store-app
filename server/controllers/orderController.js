@@ -13,7 +13,7 @@ export const createOrder = async (req, res) => {
       return res.status(400).json({ message: 'Cart is empty or missing' });
     }
 
-    const total = cart.items.reduce((sum, item) => {
+    const subtotal = cart.items.reduce((sum, item) => {
       console.log('OC -> Cart items received:', cart.items);
       console.log('OC -> Cart items received:price:', item.price);
       const price = parseFloat(item?.price);
@@ -25,6 +25,12 @@ export const createOrder = async (req, res) => {
       return sum + price * quantity;
     }, 0);
 
+    const shipping = 5.99;//flat rate
+    const tax =subtotal *0.07; // 7% tax
+    const discount = 0 // not yet dynamic  
+    const rawTotal = subtotal + shipping + tax - discount;
+    // Round to 2 decimal places
+    const total = Math.round(rawTotal * 100) / 100;
    
     const cancellableUntil = new Date(Date.now() + 60 * 60 * 1000); // 1 hour from creation
 
@@ -32,12 +38,18 @@ export const createOrder = async (req, res) => {
       userId,
       items: cart.items,
       total,
+      shipping,
+      tax,
+      discount,
       cancellableUntil
     });
     console.log('Order contents:', {
       userId,
       items: cart.items,
       total,
+      shipping,
+      tax,
+      discount,
       cancellableUntil,
     });
 
@@ -76,7 +88,7 @@ export const getOrderById = async (req, res) => {
 
     if (!order) return res.status(404).json({ message: 'Order not found' });
 
-    res.status(200).json(order);
+    res.status(200).json(order.toObject());
   } catch (err) {
     res.status(500).json({ message: 'Error fetching order', error: err.message });
   }

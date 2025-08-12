@@ -1,35 +1,74 @@
-<mat-toolbar color="primary">
-  <span> <a routerLink="/books" style="color: rgb(255, 255, 255);text-decoration: none;">📚 BookStore App </a></span>
+<mat-toolbar color="primary" class="nav-wrapper">
+  <div class="logo">
+    <span>
+      <a
+        routerLink="/books"
+        style="color: rgb(255, 255, 255); text-decoration: none"
+        >📚 BookStore App
+      </a></span
+    >
+  </div>
   <span class="spacer"></span>
+    <div class="login-menu">
+    <a *ngIf="showLogin" mat-button routerLink="/login">
+      <mat-icon fontIcon="account_circle"></mat-icon> Sign in</a>
+    
+    <a *ngIf="isLoggedIn" mat-button class="greetings" [matMenuTriggerFor]="accountMenu">Hello, {{ userInfo?.username | titlecase }}</a>
+    <!-- Account Menu -->
+    <mat-menu #accountMenu="matMenu" xPosition="before">
+      <div class="text-small text-center">
+      {{
+        userInfo?.role === "Admin" || userInfo?.role === "Editor"
+          ? "&star; &star; &star;"
+          : ""
+      }}
+    </div>
+      <button mat-menu-item (click)="goToAccount()">My Account</button>
+      <button mat-menu-item (click)="goToOrders()">My Orders</button>
+      <button mat-menu-item (click)="logout()">Logout</button>
+    </mat-menu>
+  </div>
 
+    <button class="cart" mat-button [routerLink]="['/cart']">
+      <mat-icon fontIcon="shopping_cart"></mat-icon><span class="itemTotal">{{ totalItems }}</span>
+    </button>
+  
+
+</mat-toolbar>
+
+<mat-toolbar color="gray" class="justify-content-center">
   <a mat-button routerLink="/books">Browse Books</a>
   <a mat-button routerLink="/about">About Us</a>
   <a mat-button routerLink="/contact">Contact </a>
-  <button mat-button [routerLink]="['/cart']">Cart [{{totalItems}}]</button>
- 
+
   <a *ngIf="showLogin" mat-button routerLink="/login">Login</a>
-  <a *ngIf="!isLoggedIn && !showLogin" mat-button routerLink="/register">Register</a>
+  <a *ngIf="!isLoggedIn && !showLogin" mat-button routerLink="/register"
+    >Register</a>
 
   <a *ngIf="isAdmin" mat-button routerLink="/users">User Dashboard</a>
 
-  
   <!-- If user IS logged in -->
-   <ng-container *ngIf="isLoggedIn">
-      <a mat-button (click)="logout()">Logout</a> |
-       <span class="text-small margin-left-3"> {{userInfo?.username | titlecase}} 
-       {{userInfo?.role === 'Admin' || userInfo?.role === 'Editor'? '['+userInfo?.role+']' : ''}}
-      </span>
-   </ng-container>
-  
-
+  <!-- <ng-container *ngIf="isLoggedIn">
+    <a mat-button (click)="logout()">Logout</a> |
+    <span class="text-small margin-left-3">
+      {{ userInfo?.username | titlecase }}
+      {{
+        userInfo?.role === "Admin" || userInfo?.role === "Editor"
+          ? "[" + userInfo?.role + "]"
+          : ""
+      }}
+    </span>
+  </ng-container> -->
 </mat-toolbar>
 
 <div *ngIf="showBackToBooks" class="breadcrumb-nav">
   <!-- <button mat-button color="accent" [routerLink]="['/books']">
     ← Back to Books
   </button> -->
-  <a class="breadcrumb-link" routerLink="/books"><mat-icon>home</mat-icon> Home</a> &#xbb; <a class="breadcrumb-link" [routerLink]="['/books']">Books</a>
-
+  <a class="breadcrumb-link" routerLink="/books"
+    ><mat-icon>home</mat-icon> Home</a
+  >
+  &#xbb; <a class="breadcrumb-link" [routerLink]="['/books']">Books</a>
 </div>
 
 <!-- 

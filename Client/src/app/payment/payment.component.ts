@@ -106,7 +106,10 @@ cancel(): void {
           console.log('✅ Payment successful:', res);
           // Clear cart after successful payment
         this.cartService.clearCart();
-          this.router.navigate(['/thank-you']);
+        const orderId = this.orderId;
+          this.router.navigate(['/user/thank-you'],{
+            queryParams: { orderId},
+          });
         },
         error: (err) => {
           console.error('💥 Payment failed:', err);

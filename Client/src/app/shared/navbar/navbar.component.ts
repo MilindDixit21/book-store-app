@@ -84,5 +84,14 @@ public get showBackToBooks(): boolean {
 }
 
 
+goToAccount(): void {
+  this.router.navigate(['/account']);
+}
+
+goToOrders(): void {
+  this.router.navigate(['/user/my-orders']);
+}
+
+
 
 }

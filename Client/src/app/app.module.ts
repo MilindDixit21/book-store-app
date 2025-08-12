@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { MatTableModule  } from '@angular/material/table';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -36,6 +37,7 @@ import { FooterComponent } from './shared/footer/footer.component';
 import { BookDetailsComponent } from './books/book-details/book-details.component';
 import { PaymentComponent } from './payment/payment.component';
 import { ThankYouComponent } from './payment/thank-you/thank-you.component';
+import { MyOrdersComponent } from './my-orders/my-orders.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +56,8 @@ import { ThankYouComponent } from './payment/thank-you/thank-you.component';
     FooterComponent,
     BookDetailsComponent,
     PaymentComponent,
-    ThankYouComponent
+    ThankYouComponent,
+    MyOrdersComponent
   ],
   imports: [
     BrowserModule,
@@ -67,6 +70,7 @@ import { ThankYouComponent } from './payment/thank-you/thank-you.component';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     MatToolbarModule,
+    MatMenuModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,

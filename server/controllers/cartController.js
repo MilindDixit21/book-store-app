@@ -44,6 +44,8 @@ export async function saveCartToMongo(req, res) {
 
         cart.items.push({ 
           bookId: incoming._id, 
+          title: incoming.title,
+          author:incoming.author,
           quantity: incoming.quantity,
           price: book.price,
          });

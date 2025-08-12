@@ -1,9 +1,66 @@
 <div class="container text-center my-5">
-<div class="check">&check;</div>
-<h2>Thank you for your order</h2>
+  <div class="check">&check;</div>
+  <h2>THANK YOU</h2>
+  <h3>Order number: {{ orderId | uppercase }}</h3>
+  <p>Your order has been confirmed and you will receive an order confirmation email shortly.</p>
 
-<a routerLink="/books">Continue shopping</a>
+  <!-- 🧾 Invoice Table -->
+  <div id="invoice-content" class="invoice-box mt-4" *ngIf="order">
+    <div class="header-info">
+    <h5 class="text-start mb-3">
+    Order number: {{orderId |uppercase}} <br>
+    Order date: {{order.createdAt |date :'medium'}} <br>
+    Customer : {{userName}}</h5>
 
+    <span>
+ <!-- 🖨️ Print Button -->
+  <button class="btn btn-success mt-3" (click)="printInvoice()">Print Receipt</button>
+    </span>
 </div>
+    <table class="table table-bordered text-start">
+      <thead class="table-light">
+        <tr>
+          <th>Title</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of order.items">
+          <td>{{ item.title }}</td>
+          <td>${{ item.price | number:'1.2-2' }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>${{ item.price * item.quantity | number:'1.2-2' }}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+          <tr>
+          <td colspan="3" class="text-end fw-bold">Est. tax</td>
+          <td>${{ order.tax| number:'1.2-2' }}</td>
+        </tr>
+          <tr>
+          <td colspan="3" class="text-end fw-bold">Shipping</td>
+          <td>${{ order.shipping | number:'1.2-2' }}</td>
+        </tr>
+        <tr>
+          <td colspan="3" class="text-end fw-bold">Discount</td>
+          <td>${{ order.discount| number:'1.2-2' }}</td>
+        </tr>
+        <tr>
+          <td colspan="3" class="text-end fw-bold">Total</td>
+          <td>${{ order.total | number:'1.2-2' }}</td>
+        </tr>
+   
+        <tr *ngIf="order.invoiceUrl">
+          <td colspan="3" class="text-end">Invoice Link</td>
+          <td><a [href]="order.invoiceUrl" target="_blank">Download PDF</a></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
 
-
+   <p class="my-5">
+    <a routerLink="/books">Continue shopping</a>
+  </p>
+</div>

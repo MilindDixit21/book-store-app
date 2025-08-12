@@ -1,0 +1,43 @@
+.orders-container {
+  padding: 1rem;
+}
+
+.order-card {
+  border: 1px solid #ccc;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.order-header, .order-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.order-table th, .order-table td {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+}
+
+.cancel-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+
+  &[disabled] {
+    background-color: #bdbdbd;
+    cursor:auto ;
+}
+}
+.message{
+ font-size: 0.8em; 
+}
+
